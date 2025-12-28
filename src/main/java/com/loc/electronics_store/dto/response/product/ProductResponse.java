@@ -31,9 +31,3 @@ public class ProductResponse {
     private LocalDateTime updatedAt;
 }
 
-@Data
-@AllArgsConstructor
-class AttributeResponse {
-    private String name;
-    private String value;
-}

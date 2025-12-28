@@ -9,7 +9,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class productCreationRequest {
+public class ProductCreationRequest {
     @NotBlank(message = "Tên sản phẩm không được để trống")
     private String name;
 
@@ -31,6 +31,7 @@ public class productCreationRequest {
     @NotNull(message = "Brand ID không được để trống")
     private Long brandId;
 
+    @NotNull(message = "Số lượng ảnh phải từ 1 trở lên")
     private List<String> imageUrls;
 
     // Phải có @Valid để Spring validate từng AttributeRequest bên trong
