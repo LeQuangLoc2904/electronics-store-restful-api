@@ -10,9 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AttributeRequest {
-    @NotBlank(message = "Tên thuộc tính không được để trống")
+    @NotBlank(message = "ATTRIBUTENAME_NOTEMPTY")
     private String name;
 
-    @NotBlank(message = "Giá trị thuộc tính không được để trống")
+    @NotBlank(message = "ATTRIBUTEVALUE_NOTEMPTY")
     private String value;
 }

@@ -6,6 +6,8 @@ import com.loc.electronics_store.dto.response.product.ProductResponse;
 import com.loc.electronics_store.entity.Brand;
 import com.loc.electronics_store.entity.Category;
 import com.loc.electronics_store.entity.Product;
+import com.loc.electronics_store.exception.AppException;
+import com.loc.electronics_store.exception.ErrorCode;
 import com.loc.electronics_store.mapper.ProductMapper;
 import com.loc.electronics_store.repository.*;
 import com.loc.electronics_store.service.ProductService;
@@ -30,9 +32,9 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public ProductResponse createProduct(ProductCreationRequest productRequest) {
         Category category = categoryRepository.findById(productRequest.getCategoryId())
-                .orElseThrow(() -> new RuntimeException("Category not found with id: " + productRequest.getCategoryId()));
+                .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOTEXISTED));
         Brand brand = brandRepository.findById(productRequest.getBrandId())
-                .orElseThrow(() -> new RuntimeException("Brand not found with id: " + productRequest.getBrandId()));
+                .orElseThrow(() -> new AppException(ErrorCode.BRAND_NOTEXISTED));
 
         Product newProduct = productMapper.toEntity(productRequest);
         newProduct.setCategory(category);
@@ -44,7 +46,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse getProductById(Long productId) {
-        return productMapper.toResponse(productRepository.findByIdAndDeletedFalse(productId));
+        Product existingProduct = productRepository.findByIdAndDeletedFalse(productId);
+        if (existingProduct == null) {
+            throw new AppException(ErrorCode.PRODUCT_NOTEXISTED);
+        }
+
+        return productMapper.toResponse(existingProduct);
     }
 
     @Override
@@ -57,16 +64,15 @@ public class ProductServiceImpl implements ProductService {
 
             return productMapper.toResponse(productRepository.save(existingProduct));
         }
-
-        return null;
+        else throw new AppException(ErrorCode.PRODUCT_NOTEXISTED);
     }
 
     @Override
     public void deleteProduct(Long productId) {
         Product existingProduct = productRepository.findByIdAndDeletedFalse(productId);
-        if (existingProduct == null) {
-            throw new RuntimeException("Product not found with id: " + productId);
+        if (existingProduct != null) {
+            productRepository.delete(existingProduct);
         }
-        productRepository.delete(existingProduct);
+
     }
 }

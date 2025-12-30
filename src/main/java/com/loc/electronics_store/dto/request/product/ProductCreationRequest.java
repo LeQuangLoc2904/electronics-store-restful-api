@@ -10,28 +10,27 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ProductCreationRequest {
-    @NotBlank(message = "Tên sản phẩm không được để trống")
+    @NotBlank(message = "PRODUCTNAME_NOTEMPTY")
     private String name;
 
-    @NotNull(message = "Giá sản phẩm không được để trống")
-    @Min(value = 0, message = "Giá sản phẩm phải lớn hơn hoặc bằng 0")
+    @NotNull(message = "PRODUCTPRICE_NOTEMPTY")
+    @Min(value = 1, message = "PRODUCTPRICE_INVALID")
     private Double price;
 
-    @NotNull(message = "Số lượng tồn kho không được để trống")
-    @Min(value = 0, message = "Số lượng tồn kho không được nhỏ hơn 0")
+    @NotNull(message = "STOCKQUANTITY_NOTEMPTY")
+    @Min(value = 1, message = "STOCKQUANTITY_INVALID")
     private Integer stockQuantity;
 
+    @NotBlank(message = "THUMBNAIL_NOTEMPTY")
     private String thumbnail;
 
+    @NotBlank(message = "DESCRIPTION_NOTEMPTY")
     private String description;
 
-    @NotNull(message = "Category ID không được để trống")
     private Long categoryId;
 
-    @NotNull(message = "Brand ID không được để trống")
     private Long brandId;
 
-    @NotNull(message = "Số lượng ảnh phải từ 1 trở lên")
     private List<String> imageUrls;
 
     // Phải có @Valid để Spring validate từng AttributeRequest bên trong
