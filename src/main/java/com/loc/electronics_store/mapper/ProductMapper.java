@@ -68,7 +68,7 @@ public interface ProductMapper {
 
     @Mapping(target = "categoryName", source = "category.name")
     @Mapping(target = "brandName", source = "brand.name")
-    @Mapping(target = "images", source = "images", qualifiedByName = "mapProductImagesToImageUrls")
+    @Mapping(target = "imageUrls", source = "images", qualifiedByName = "mapProductImagesToImageUrls")
     @Mapping(target = "attributes", source = "attributes", qualifiedByName = "mapProductAttributesToAttributes")
     ProductResponse toResponse(Product product);
 

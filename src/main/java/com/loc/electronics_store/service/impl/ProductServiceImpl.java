@@ -7,9 +7,7 @@ import com.loc.electronics_store.entity.Brand;
 import com.loc.electronics_store.entity.Category;
 import com.loc.electronics_store.entity.Product;
 import com.loc.electronics_store.mapper.ProductMapper;
-import com.loc.electronics_store.repository.BrandRepository;
-import com.loc.electronics_store.repository.CategoryRepository;
-import com.loc.electronics_store.repository.ProductRepository;
+import com.loc.electronics_store.repository.*;
 import com.loc.electronics_store.service.ProductService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +24,8 @@ public class ProductServiceImpl implements ProductService {
     final ProductMapper productMapper;
     final CategoryRepository categoryRepository;
     final BrandRepository brandRepository;
+    final ProductAttributeRepository productAttributeRepository;
+    final ProductImageRepository productImageRepository;
 
     @Override
     public ProductResponse createProduct(ProductCreationRequest productRequest) {
@@ -51,7 +51,10 @@ public class ProductServiceImpl implements ProductService {
     public ProductResponse updateProduct(Long productId, ProductUpdateRequest updateRequest) {
         Product existingProduct = productRepository.findByIdAndDeletedFalse(productId);
         if (existingProduct != null) {
+            productImageRepository.deleteByProduct_Id(productId);
+            productAttributeRepository.deleteByProduct_Id(productId);
             productMapper.updateEntityFromDto(updateRequest, existingProduct);
+
             return productMapper.toResponse(productRepository.save(existingProduct));
         }
 

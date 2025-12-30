@@ -21,7 +21,7 @@ public class ProductResponse {
     private String brandName;
 
     // Danh sách ảnh
-    private List<String> images;
+    private List<String> imageUrls;
 
     // Danh sách các thuộc tính chi tiết
     private List<AttributeResponse> attributes;
