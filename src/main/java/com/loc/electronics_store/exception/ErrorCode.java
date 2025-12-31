@@ -14,6 +14,13 @@ public enum ErrorCode {
     DESCRIPTION_NOTEMPTY("*description not empty", 1010),
     PRODUCT_NOTEXISTED("product not existed", 1011),
 
+    // validate user
+    USERNAME_NOT_EMPTY("*username not empty", 2001),
+    PASSWORD_NOT_EMPTY("*password not empty", 2002),
+    FULLNAME_NOT_EMPTY("*full name not empty", 2003),
+    USER_EXISTED("*user existed", 2004),
+    USER_NOT_EXISTED("*user not existed", 2005),
+
     CATEGORY_NOTEXISTED("category not existed", 1012),
     BRAND_NOTEXISTED("brand not existed", 1013),
     BAD_REQUEST("Bad Request", 400);

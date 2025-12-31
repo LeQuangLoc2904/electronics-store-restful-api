@@ -25,6 +25,8 @@ public class User extends BaseEntity {
     private String phone;
     private String address;
     private String role; // Ví dụ: ROLE_USER, ROLE_ADMIN
+
+    @Builder.Default
     private boolean enabled = true;
 
     @OneToMany(mappedBy = "user")
