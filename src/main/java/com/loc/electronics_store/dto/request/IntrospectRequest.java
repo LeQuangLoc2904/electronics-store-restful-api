@@ -1,4 +1,4 @@
-package com.loc.electronics_store.dto.response.auth;
+package com.loc.electronics_store.dto.request;
 
 
 import lombok.*;
@@ -9,7 +9,6 @@ import lombok.experimental.FieldDefaults;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class AuthenticationRepsonse {
+public class IntrospectRequest {
     String token;
-    boolean authenticated;
 }
