@@ -1,7 +1,14 @@
 package com.loc.electronics_store.service;
 
+import com.loc.electronics_store.dto.request.IntrospectRequest;
 import com.loc.electronics_store.dto.request.auth.AuthenticationRequest;
+import com.loc.electronics_store.dto.response.IntrospectResponse;
+import com.loc.electronics_store.dto.response.auth.AuthenticationRepsonse;
+import com.nimbusds.jose.JOSEException;
+
+import java.text.ParseException;
 
 public interface AuthenticationService {
-    boolean authenticate(AuthenticationRequest request);
+    AuthenticationRepsonse authenticate(AuthenticationRequest request);
+    IntrospectResponse introspect(IntrospectRequest request) throws JOSEException, ParseException;
 }

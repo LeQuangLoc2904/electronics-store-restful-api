@@ -14,8 +14,11 @@ spring:
         format_sql: true
 
 
-  # C?u hình ?? dùng @CreatedDate và @LastModifiedDate
+
   data:
     jpa:
       repositories:
         bootstrap-mode: default
+
+jwt:
+  signerKey: z668y668P92vXpY6q9z2Rk8WnN3mQ4T7V9A2C5E8G1J4M7P0S3V6Y9B2E5H8K1M4

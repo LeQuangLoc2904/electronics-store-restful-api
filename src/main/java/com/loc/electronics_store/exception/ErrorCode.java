@@ -21,6 +21,7 @@ public enum ErrorCode {
     USER_EXISTED("*user existed", 2004),
     USER_NOT_EXISTED("*user not existed", 2005),
 
+    UNAUTHENTICATED("unauthenticated", 3000),
     CATEGORY_NOTEXISTED("category not existed", 1012),
     BRAND_NOTEXISTED("brand not existed", 1013),
     BAD_REQUEST("Bad Request", 400);
