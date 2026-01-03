@@ -48,6 +48,14 @@ public class UserController {
         return apiResponse;
     }
 
+    @GetMapping("/myInfo")
+    ApiResponse<UserResponse> getMyInfo() {
+        ApiResponse<UserResponse> apiResponse = new ApiResponse<>();
+        apiResponse.setResult(userService.getMyInfo());
+
+        return apiResponse;
+    }
+
     @PostMapping
     ApiResponse<UserResponse> createUser(@RequestBody @Valid UserCreationRequest request) {
         ApiResponse<UserResponse> apiResponse = new ApiResponse<>();
