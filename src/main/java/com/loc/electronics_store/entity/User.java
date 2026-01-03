@@ -2,8 +2,12 @@ package com.loc.electronics_store.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -12,24 +16,27 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
     @Column(unique = true, nullable = false)
-    private String username;
-    private String password;
-    private String email;
-    private String fullName;
-    private String phone;
-    private String address;
-    private String role; // Ví dụ: ROLE_USER, ROLE_ADMIN
+    String username;
+    String password;
+    String email;
+    String fullName;
+    String phone;
+    String address;
+
+    Set<String> roles; // Ví dụ: ROLE_USER, ROLE_ADMIN
 
     @Builder.Default
-    private boolean enabled = true;
+    boolean enabled = true;
 
     @OneToMany(mappedBy = "user")
-    private List<Token> tokens;
+    List<Token> tokens;
 }
+
 
