@@ -7,6 +7,8 @@ import com.loc.electronics_store.dto.response.user.UserResponse;
 import java.util.List;
 
 public interface UserService {
+    UserResponse getMyInfo();
+    List<UserResponse> getUsers();
     UserResponse createUser(UserCreationRequest request);
     UserResponse updateUser(Long userId, UserUpdateRequest request);
     UserResponse getUserById(Long userId);
