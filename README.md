@@ -6,6 +6,7 @@ The Electronics Store RESTful API is a backend service designed to manage an ele
 - Handle user operations, including authentication and authorization.
 - Support for creating and managing orders and carts.
 - Comprehensive exception handling and validation.
+- Token-based authentication using JWT.
 
 ### Prerequisites
 - Java Development Kit (JDK) 17 or higher
