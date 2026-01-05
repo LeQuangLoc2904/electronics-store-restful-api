@@ -30,7 +30,8 @@ public class User extends BaseEntity {
     String phone;
     String address;
 
-    Set<String> roles; // Ví dụ: ROLE_USER, ROLE_ADMIN
+    @ManyToMany
+    Set<Role> roles; // Ví dụ: ROLE_USER, ROLE_ADMIN
 
     @Builder.Default
     boolean enabled = true;
