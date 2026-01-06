@@ -30,7 +30,8 @@ public enum ErrorCode {
     CATEGORY_NOTEXISTED("category not existed", 1012, HttpStatus.NOT_FOUND),
     BRAND_NOTEXISTED("brand not existed", 1013, HttpStatus.NOT_FOUND),
     BAD_REQUEST("Bad Request", 400, HttpStatus.BAD_REQUEST),
-    UNAUTHORIZED("You do not have permission", 3001, HttpStatus.FORBIDDEN);
+    UNAUTHORIZED("You do not have permission", 3001, HttpStatus.FORBIDDEN),
+    INVALID_DOB("*invalid date of birth", 3002, HttpStatus.BAD_REQUEST);
 
     private String message;
     private int code;
