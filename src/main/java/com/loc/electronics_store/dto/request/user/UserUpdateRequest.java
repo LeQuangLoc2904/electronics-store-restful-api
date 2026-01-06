@@ -1,28 +1,28 @@
 package com.loc.electronics_store.dto.request.user;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
+
+import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserUpdateRequest {
     @NotBlank(message = "USERNAME_NOT_EMPTY")
-    private String username;
+    String username;
 
     @NotBlank(message = "PASSWORD_NOT_EMPTY")
-    private String password;
+    String password;
 
-    private String email;
+    String email;
 
     @NotBlank(message = "FULLNAME_NOT_EMPTY")
-    private String fullName;
-
-    private String phone;
-
-    private String address;
+    String fullName;
+    String phone;
+    String address;
+    List<String> roles;
 }

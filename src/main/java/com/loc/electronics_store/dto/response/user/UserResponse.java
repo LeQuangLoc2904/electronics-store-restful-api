@@ -1,5 +1,6 @@
 package com.loc.electronics_store.dto.response.user;
 
+import com.loc.electronics_store.dto.response.RoleResponse;
 import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -21,5 +22,5 @@ public class UserResponse {
     String fullName;
     String phone;
     String address;
-    //Set<String> roles;
+    Set<RoleResponse> roles;
 }
