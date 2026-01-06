@@ -8,6 +8,7 @@ import com.loc.electronics_store.enums.Role;
 import com.loc.electronics_store.exception.AppException;
 import com.loc.electronics_store.exception.ErrorCode;
 import com.loc.electronics_store.mapper.UserMapper;
+import com.loc.electronics_store.repository.RoleRepository;
 import com.loc.electronics_store.repository.UserRepository;
 import com.loc.electronics_store.service.UserService;
 import lombok.AccessLevel;
@@ -28,12 +29,13 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 @Slf4j
 public class UserServiceImpl implements UserService {
-    final UserRepository userRepository;
-    final UserMapper userMapper;
-    final PasswordEncoder passwordEncoder;
+    UserRepository userRepository;
+    UserMapper userMapper;
+    PasswordEncoder passwordEncoder;
+    RoleRepository rolesRepository;
 
     @Override
     @PreAuthorize("hasRole('ADMIN')")
@@ -73,8 +75,10 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(()-> new AppException(ErrorCode.USER_NOT_EXISTED));
 
         userMapper.updateUserFromRequest(request, user);
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10);
         user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        var roles = rolesRepository.findAllById(request.getRoles());
+        user.setRoles(new HashSet<>(roles));
 
         return userMapper.toResponse(userRepository.save(user));
     }
