@@ -33,6 +33,6 @@ public class UserCreationRequest {
 
     String address;
 
-    @DobConstraint(min = 2, message = "INVALID_DOB")
+    @DobConstraint(min = 3, message = "INVALID_DOB")
     LocalDate dob;
 }

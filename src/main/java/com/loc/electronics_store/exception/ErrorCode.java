@@ -31,7 +31,7 @@ public enum ErrorCode {
     BRAND_NOTEXISTED("brand not existed", 1013, HttpStatus.NOT_FOUND),
     BAD_REQUEST("Bad Request", 400, HttpStatus.BAD_REQUEST),
     UNAUTHORIZED("You do not have permission", 3001, HttpStatus.FORBIDDEN),
-    INVALID_DOB("*invalid date of birth", 3002, HttpStatus.BAD_REQUEST);
+    INVALID_DOB("*your age must be at least {min}", 3002, HttpStatus.BAD_REQUEST);
 
     private String message;
     private int code;
