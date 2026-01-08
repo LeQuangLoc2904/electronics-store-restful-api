@@ -2,6 +2,7 @@ package com.loc.electronics_store.service.impl;
 
 import com.loc.electronics_store.dto.request.IntrospectRequest;
 import com.loc.electronics_store.dto.request.LogoutRequest;
+import com.loc.electronics_store.dto.request.RefreshRequest;
 import com.loc.electronics_store.dto.request.auth.AuthenticationRequest;
 import com.loc.electronics_store.dto.response.IntrospectResponse;
 import com.loc.electronics_store.dto.response.auth.AuthenticationRepsonse;
@@ -94,6 +95,32 @@ public class AuthenticationServiceImpl implements AuthenticationService{
                 .build();
 
         invalidatedTokenRepository.save(invalidatedToken);
+    }
+
+    @Override
+    public AuthenticationRepsonse refreshToken(RefreshRequest request) throws ParseException, JOSEException {
+        var signJWT = verifyToken(request.getToken());
+
+        var jit = signJWT.getJWTClaimsSet().getJWTID();
+        var expiryTime = signJWT.getJWTClaimsSet().getExpirationTime();
+
+        InvalidatedToken invalidatedToken = InvalidatedToken.builder()
+                .id(jit)
+                .expiryTime(expiryTime)
+                .build();
+
+        invalidatedTokenRepository.save(invalidatedToken);
+
+        var username = signJWT.getJWTClaimsSet().getSubject();
+        var user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new AppException(ErrorCode.UNAUTHENTICATED));
+
+        String token = generateToken(user);
+
+        return AuthenticationRepsonse.builder()
+                .token(token)
+                .authenticated(true)
+                .build();
     }
 
     private SignedJWT verifyToken(String token) throws JOSEException, ParseException {

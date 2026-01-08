@@ -2,6 +2,7 @@ package com.loc.electronics_store.controller;
 
 import com.loc.electronics_store.dto.request.IntrospectRequest;
 import com.loc.electronics_store.dto.request.LogoutRequest;
+import com.loc.electronics_store.dto.request.RefreshRequest;
 import com.loc.electronics_store.dto.request.auth.AuthenticationRequest;
 import com.loc.electronics_store.dto.response.ApiResponse;
 import com.loc.electronics_store.dto.response.IntrospectResponse;
@@ -40,6 +41,15 @@ public class AuthenticationController {
         apiResponse.setResult(authenticationService.introspect(request));
 
         return apiResponse;
+    }
+
+    @PostMapping("/refresh")
+    ApiResponse<AuthenticationRepsonse> authenticate(@RequestBody RefreshRequest request) throws ParseException, JOSEException {
+        var result = authenticationService.refreshToken(request);
+
+        return ApiResponse.<AuthenticationRepsonse>builder()
+                .result(result)
+                .build();
     }
 
     @PostMapping("/logout")
