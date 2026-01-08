@@ -3,10 +3,8 @@ package com.loc.electronics_store.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
-import java.util.List;
+
 import java.util.Set;
 
 @Entity
@@ -35,9 +33,6 @@ public class User extends BaseEntity {
 
     @Builder.Default
     boolean enabled = true;
-
-    @OneToMany(mappedBy = "user")
-    List<Token> tokens;
 }
 
 

@@ -1,6 +1,7 @@
 package com.loc.electronics_store.controller;
 
 import com.loc.electronics_store.dto.request.IntrospectRequest;
+import com.loc.electronics_store.dto.request.LogoutRequest;
 import com.loc.electronics_store.dto.request.auth.AuthenticationRequest;
 import com.loc.electronics_store.dto.response.ApiResponse;
 import com.loc.electronics_store.dto.response.IntrospectResponse;
@@ -39,5 +40,12 @@ public class AuthenticationController {
         apiResponse.setResult(authenticationService.introspect(request));
 
         return apiResponse;
+    }
+
+    @PostMapping("/logout")
+    ApiResponse<Void> logout(@RequestBody LogoutRequest request) throws ParseException, JOSEException {
+        authenticationService.logout(request);
+
+        return ApiResponse.<Void>builder().build();
     }
 }
