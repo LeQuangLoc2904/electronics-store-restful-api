@@ -16,6 +16,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +31,19 @@ public class ProductServiceImpl implements ProductService {
     final BrandRepository brandRepository;
     final ProductAttributeRepository productAttributeRepository;
     final ProductImageRepository productImageRepository;
+
+    @Override
+    public List<ProductResponse> getAll() {
+        List<Product> products = productRepository.findAllByDeletedFalse();
+
+        List<ProductResponse> productResponses = new ArrayList<>();
+
+        products.forEach(product -> {
+            productResponses.add(productMapper.toResponse(product));
+        });
+
+        return productResponses;
+    }
 
     @Override
     public ProductResponse createProduct(ProductCreationRequest productRequest) {
