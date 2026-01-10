@@ -10,6 +10,9 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -22,10 +25,11 @@ public class ProductController {
     final ProductServiceImpl productService;
 
     @GetMapping
-    ApiResponse<List<ProductResponse>> getAll() {
-        List<ProductResponse> productResponses = productService.getAll();
+    ApiResponse<Page<ProductResponse>> getAll(@RequestParam int page, @RequestParam int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductResponse> productResponses = productService.getAll(pageable);
 
-        return ApiResponse.<List<ProductResponse>>builder()
+        return ApiResponse.<Page<ProductResponse>>builder()
                 .result(productResponses)
                 .build();
     }
