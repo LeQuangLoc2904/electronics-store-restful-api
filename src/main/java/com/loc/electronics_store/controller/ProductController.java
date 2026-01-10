@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -18,6 +20,15 @@ import org.springframework.web.bind.annotation.*;
 public class ProductController {
 
     final ProductServiceImpl productService;
+
+    @GetMapping
+    ApiResponse<List<ProductResponse>> getAll() {
+        List<ProductResponse> productResponses = productService.getAll();
+
+        return ApiResponse.<List<ProductResponse>>builder()
+                .result(productResponses)
+                .build();
+    }
 
     @PostMapping
     ApiResponse<ProductResponse> createProduct(@RequestBody @Valid ProductCreationRequest request) {
