@@ -41,6 +41,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    public Page<ProductResponse> getAllByCategoryId(Long id, Pageable pageable) {
+        Page<Product> products = productRepository.findByCategoryIdAndDeletedFalse(id, pageable);
+
+        return products.map(productMapper::toResponse);
+    }
+
+    @Override
     public ProductResponse createProduct(ProductCreationRequest productRequest) {
         Category category = categoryRepository.findById(productRequest.getCategoryId())
                 .orElseThrow(() -> new AppException(ErrorCode.CATEGORY_NOTEXISTED));

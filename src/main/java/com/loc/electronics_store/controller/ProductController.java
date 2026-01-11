@@ -34,6 +34,18 @@ public class ProductController {
                 .build();
     }
 
+    @GetMapping("/category")
+    ApiResponse<Page<ProductResponse>> getAllByCategoryId(@RequestParam Long categoryId,
+                                                          @RequestParam int page,
+                                                          @RequestParam int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<ProductResponse> productResponses = productService.getAllByCategoryId(categoryId, pageable);
+
+        return ApiResponse.<Page<ProductResponse>>builder()
+                .result(productResponses)
+                .build();
+    }
+
     @PostMapping
     ApiResponse<ProductResponse> createProduct(@RequestBody @Valid ProductCreationRequest request) {
         ApiResponse<ProductResponse> apiResponse = new ApiResponse<>();
