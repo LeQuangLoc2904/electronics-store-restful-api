@@ -10,4 +10,5 @@ public interface CategoryService {
     Page<CategoryResponse> getAll(Pageable pageable);
     CategoryResponse create(CategoryCreationRequest request);
     CategoryResponse update(Long id, CategoryUpdateRequest request);
+    CategoryResponse deleteBrandFromCategory(Long categoryId, Long brandId);
 }
