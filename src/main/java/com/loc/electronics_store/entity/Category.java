@@ -21,6 +21,9 @@ public class Category extends BaseEntity {
     @OneToMany(mappedBy = "category")
     private List<Product> products;
 
+    @ManyToMany
+    private List<Brand> brands;
+
     @ManyToMany(mappedBy = "categories")
     private List<Promotion> promotions;
 }
