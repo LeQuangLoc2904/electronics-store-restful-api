@@ -49,4 +49,13 @@ public class CategoryController {
                 .result(categoryService.update(id, request))
                 .build();
     }
+
+    @DeleteMapping("/delete-brand")
+    ApiResponse<CategoryResponse> deleteBrandFromCategory(@RequestParam Long categoryId,
+                                               @RequestParam Long brandId) {
+
+        return ApiResponse.<CategoryResponse>builder()
+                .result(categoryService.deleteBrandFromCategory(categoryId, brandId))
+                .build();
+    }
 }
