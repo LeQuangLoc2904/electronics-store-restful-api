@@ -2,6 +2,7 @@ package com.loc.electronics_store.controller;
 
 import com.loc.electronics_store.dto.request.product.ProductCreationRequest;
 import com.loc.electronics_store.dto.request.product.ProductFilterRequest;
+import com.loc.electronics_store.dto.request.product.ProductSearchingKeyword;
 import com.loc.electronics_store.dto.request.product.ProductUpdateRequest;
 import com.loc.electronics_store.dto.response.ApiResponse;
 import com.loc.electronics_store.dto.response.product.ProductResponse;
@@ -82,6 +83,13 @@ public class ProductController {
                 .build();
     }
 
+    @PostMapping("/search")
+    ApiResponse<Page<ProductResponse>> searchProduct(@RequestBody ProductSearchingKeyword keyword) {
+        return ApiResponse.<Page<ProductResponse>>builder()
+                .result(productService.searchProduct(keyword))
+                .build();
+    }
+
     @PostMapping
     ApiResponse<ProductResponse> createProduct(@RequestBody @Valid ProductCreationRequest request) {
         ApiResponse<ProductResponse> apiResponse = new ApiResponse<>();
@@ -109,24 +117,6 @@ public class ProductController {
         productService.deleteProduct(id);
         apiResponse.setResult("Delete successfully");
         return apiResponse;
-    }
-
-    /**
-     * Lấy danh sách các options để hiển thị filter
-     * Dùng khi load trang product để hiển thị các checkbox/radio button
-     *
-     * Response Example:
-     * {
-     *   "RAM": ["4GB", "6GB", "8GB", "12GB"],
-     *   "Chip": ["A15 Bionic", "A16 Bionic", "A17 Pro"],
-     *   "Màn hình": ["6.1 inch", "6.7 inch"]
-     * }
-     */
-    @GetMapping("/filter/options")
-    ApiResponse<Map<String, List<String>>> getFilterOptions() {
-        return ApiResponse.<Map<String, List<String>>>builder()
-                .result(attributeFilterService.getAllAttributeValues())
-                .build();
     }
 
     /**

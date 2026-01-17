@@ -2,6 +2,7 @@ package com.loc.electronics_store.service;
 
 import com.loc.electronics_store.dto.request.product.ProductCreationRequest;
 import com.loc.electronics_store.dto.request.product.ProductFilterRequest;
+import com.loc.electronics_store.dto.request.product.ProductSearchingKeyword;
 import com.loc.electronics_store.dto.request.product.ProductUpdateRequest;
 import com.loc.electronics_store.dto.response.product.ProductResponse;
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ public interface ProductService {
     Page<ProductResponse> getAll(Pageable pageable);
     Page<ProductResponse> getAllByCategoryId(Long id, Pageable pageable);
     Page<ProductResponse> filterProducts(ProductFilterRequest filterRequest);
+    Page<ProductResponse> searchProduct(ProductSearchingKeyword keyword);
     ProductResponse createProduct(ProductCreationRequest productRequest);
     ProductResponse getProductById(Long productId);
     ProductResponse updateProduct(Long productId, ProductUpdateRequest updateRequest);
