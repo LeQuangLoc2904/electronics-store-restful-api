@@ -2,6 +2,7 @@ package com.loc.electronics_store.service.impl;
 
 import com.loc.electronics_store.dto.request.product.ProductCreationRequest;
 import com.loc.electronics_store.dto.request.product.ProductFilterRequest;
+import com.loc.electronics_store.dto.request.product.ProductSearchingKeyword;
 import com.loc.electronics_store.dto.request.product.ProductUpdateRequest;
 import com.loc.electronics_store.dto.response.product.ProductResponse;
 import com.loc.electronics_store.entity.Brand;
@@ -91,6 +92,27 @@ public class ProductServiceImpl implements ProductService {
 
         // Map từ entity sang DTO
         return products.map(productMapper::toResponse);
+    }
+
+    @Override
+    public Page<ProductResponse> searchProduct(ProductSearchingKeyword keyword) {
+        var specification = productSpecification.bySearchKeyword(keyword.getKeyword());
+
+        Sort sort = Sort.by(
+                "DESC".equalsIgnoreCase(keyword.getSortDirectionOrDefault())
+                ? Sort.Direction.DESC
+                : Sort.Direction.ASC
+                , keyword.getSortByOrDefault()
+        );
+
+        Pageable pageable = PageRequest.of(
+                keyword.getPageOrDefault(),
+                keyword.getSizeOrDefault(),
+                sort
+        );
+
+        return productRepository.findAll(specification, pageable)
+                .map(productMapper::toResponse);
     }
 
     @Override
