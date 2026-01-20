@@ -5,11 +5,18 @@ import com.loc.electronics_store.dto.request.cart.CartResponse;
 import com.loc.electronics_store.entity.CartItem;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CartService {
-    CartResponse getCart();
-    CartResponse addItem(Long productId);
-    CartResponse decreaseQuantity(Long id);
-    CartResponse deleteItem(Long productId);
-    Double getTotalPrice(List<CartItem> cartItems);
+    CartResponse getCart(Optional<Long> couponId);
+    CartResponse addItem(Long productId, Optional<Long> couponId);
+    CartResponse decreaseQuantity(Long id, Optional<Long> couponId);
+    CartResponse deleteItem(Long productId, Optional<Long> couponId);
+
+    // Coupon operations
+    CartResponse applyCoupon(String couponCode);
+    CartResponse removeCoupon(Optional<Long> couponId);
+
+    // Price calculation methods
+    Double getSubTotalPrice(List<CartItem> cartItems);
 }

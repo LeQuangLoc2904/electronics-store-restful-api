@@ -5,23 +5,23 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user_coupons")
+@Table(name = "user_coupons", uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "coupon_id"})})
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserCoupon {
+public class UserCoupon extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "coupon_id")
+    @JoinColumn(name = "coupon_id", nullable = false)
     private Coupon coupon;
 
     private LocalDateTime usedAt;
