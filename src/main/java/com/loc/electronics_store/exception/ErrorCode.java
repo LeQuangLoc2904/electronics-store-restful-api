@@ -29,6 +29,17 @@ public enum ErrorCode {
     UNAUTHENTICATED("unauthenticated", 3000, HttpStatus.UNAUTHORIZED),
     CATEGORY_NOTEXISTED("category not existed", 1012, HttpStatus.NOT_FOUND),
     BRAND_NOTEXISTED("brand not existed", 1013, HttpStatus.NOT_FOUND),
+
+    // Coupon errors
+    COUPON_NOT_FOUND("coupon not found", 4001, HttpStatus.NOT_FOUND),
+    COUPON_EXPIRED("coupon has expired", 4002, HttpStatus.BAD_REQUEST),
+    COUPON_NOT_ACTIVE("coupon is not active", 4003, HttpStatus.BAD_REQUEST),
+    COUPON_NOT_STARTED("coupon has not started yet", 4004, HttpStatus.BAD_REQUEST),
+    COUPON_USAGE_LIMIT_EXCEEDED("coupon usage limit exceeded", 4005, HttpStatus.BAD_REQUEST),
+    COUPON_MINIMUM_ORDER_NOT_MET("order amount does not meet minimum requirement", 4006, HttpStatus.BAD_REQUEST),
+    COUPON_ALREADY_SELECTED("coupon already selected for this user", 4007, HttpStatus.BAD_REQUEST),
+    INVALID_DISCOUNT_TYPE("invalid discount type", 4008, HttpStatus.BAD_REQUEST),
+
     BAD_REQUEST("Bad Request", 400, HttpStatus.BAD_REQUEST),
     UNAUTHORIZED("You do not have permission", 3001, HttpStatus.FORBIDDEN),
     INVALID_DOB("*your age must be at least {min}", 3002, HttpStatus.BAD_REQUEST);
