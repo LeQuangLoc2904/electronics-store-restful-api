@@ -1,6 +1,7 @@
 package com.loc.electronics_store.controller;
 
-import com.loc.electronics_store.dto.request.coupon.CouponRequest;
+import com.loc.electronics_store.dto.request.coupon.CouponCreationRequest;
+import com.loc.electronics_store.dto.request.coupon.CouponUpdateRequest;
 import com.loc.electronics_store.dto.response.ApiResponse;
 import com.loc.electronics_store.dto.response.coupon.CouponResponse;
 import com.loc.electronics_store.service.CouponService;
@@ -22,7 +23,7 @@ public class CouponController {
      * Admin: Create new coupon
      */
     @PostMapping
-    ApiResponse<CouponResponse> createCoupon(@RequestBody CouponRequest request) {
+    ApiResponse<CouponResponse> createCoupon(@RequestBody CouponCreationRequest request) {
         return ApiResponse.<CouponResponse>builder()
                 .result(couponService.createCoupon(request))
                 .message("Coupon created successfully")
@@ -35,7 +36,7 @@ public class CouponController {
     @PutMapping("/{couponId}")
     ApiResponse<CouponResponse> updateCoupon(
             @PathVariable Long couponId,
-            @RequestBody CouponRequest request) {
+            @RequestBody CouponUpdateRequest request) {
         return ApiResponse.<CouponResponse>builder()
                 .result(couponService.updateCoupon(couponId, request))
                 .message("Coupon updated successfully")
