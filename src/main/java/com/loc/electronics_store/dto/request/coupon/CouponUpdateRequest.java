@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CouponRequest {
+public class CouponUpdateRequest {
     String code;
     String discountType; // PERCENTAGE, FIXED
     Double value; // 20 (for 20%) or 50000 (for 50k VND)
@@ -19,6 +19,5 @@ public class CouponRequest {
     Integer usageLimit;
     LocalDateTime startDate;
     LocalDateTime endDate;
-    boolean isActive;
 }
 

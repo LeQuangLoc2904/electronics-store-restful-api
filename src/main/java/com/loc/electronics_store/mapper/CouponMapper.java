@@ -1,6 +1,6 @@
 package com.loc.electronics_store.mapper;
 
-import com.loc.electronics_store.dto.request.coupon.CouponRequest;
+import com.loc.electronics_store.dto.request.coupon.CouponCreationRequest;
 import com.loc.electronics_store.dto.response.coupon.CouponResponse;
 import com.loc.electronics_store.entity.Coupon;
 import org.springframework.stereotype.Component;
@@ -31,7 +31,7 @@ public class CouponMapper {
                 .build();
     }
 
-    public Coupon toEntity(CouponRequest request) {
+    public Coupon toEntity(CouponCreationRequest request) {
         if (request == null) {
             return null;
         }
@@ -46,7 +46,7 @@ public class CouponMapper {
                 .usedCount(0)
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
-                .isActive(request.isActive())
+                .isActive(true)
                 .build();
     }
 

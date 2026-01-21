@@ -39,6 +39,7 @@ public enum ErrorCode {
     COUPON_MINIMUM_ORDER_NOT_MET("order amount does not meet minimum requirement", 4006, HttpStatus.BAD_REQUEST),
     COUPON_ALREADY_SELECTED("coupon already selected for this user", 4007, HttpStatus.BAD_REQUEST),
     INVALID_DISCOUNT_TYPE("invalid discount type", 4008, HttpStatus.BAD_REQUEST),
+    COUPON_EXISTED("coupon existed", 4009, HttpStatus.BAD_REQUEST),
 
     BAD_REQUEST("Bad Request", 400, HttpStatus.BAD_REQUEST),
     UNAUTHORIZED("You do not have permission", 3001, HttpStatus.FORBIDDEN),

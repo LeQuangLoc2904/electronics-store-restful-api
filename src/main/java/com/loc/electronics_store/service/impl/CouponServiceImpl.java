@@ -1,6 +1,7 @@
 package com.loc.electronics_store.service.impl;
 
-import com.loc.electronics_store.dto.request.coupon.CouponRequest;
+import com.loc.electronics_store.dto.request.coupon.CouponCreationRequest;
+import com.loc.electronics_store.dto.request.coupon.CouponUpdateRequest;
 import com.loc.electronics_store.dto.response.coupon.CouponResponse;
 import com.loc.electronics_store.entity.Coupon;
 import com.loc.electronics_store.exception.AppException;
@@ -28,25 +29,17 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     @Transactional
-    public CouponResponse createCoupon(CouponRequest request) {
-        log.info("Creating new coupon with code: {}", request.getCode());
-
+    public CouponResponse createCoupon(CouponCreationRequest request) {
         if (couponRepository.existsByCode(request.getCode())) {
-            throw new AppException(ErrorCode.BAD_REQUEST);
+            throw new AppException(ErrorCode.COUPON_EXISTED);
         }
 
-        Coupon coupon = couponMapper.toEntity(request);
-        Coupon savedCoupon = couponRepository.save(coupon);
-
-        log.info("Coupon created successfully with id: {}", savedCoupon.getId());
-        return couponMapper.toResponse(savedCoupon);
+        return couponMapper.toResponse(couponRepository.save(couponMapper.toEntity(request)));
     }
 
     @Override
     @Transactional
-    public CouponResponse updateCoupon(Long couponId, CouponRequest request) {
-        log.info("Updating coupon with id: {}", couponId);
-
+    public CouponResponse updateCoupon(Long couponId, CouponUpdateRequest request) {
         Coupon coupon = couponRepository.findById(couponId)
                 .orElseThrow(() -> new AppException(ErrorCode.COUPON_NOT_FOUND));
 
@@ -57,10 +50,8 @@ public class CouponServiceImpl implements CouponService {
         coupon.setUsageLimit(request.getUsageLimit());
         coupon.setStartDate(request.getStartDate());
         coupon.setEndDate(request.getEndDate());
-        coupon.setActive(request.isActive());
 
         Coupon updatedCoupon = couponRepository.save(coupon);
-        log.info("Coupon updated successfully with id: {}", couponId);
 
         return couponMapper.toResponse(updatedCoupon);
     }
@@ -68,8 +59,6 @@ public class CouponServiceImpl implements CouponService {
     @Override
     @Transactional
     public void deleteCoupon(Long couponId) {
-        log.info("Deleting coupon with id: {}", couponId);
-
         if (!couponRepository.existsById(couponId)) {
             throw new AppException(ErrorCode.COUPON_NOT_FOUND);
         }
@@ -80,22 +69,16 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     public List<CouponResponse> getAllValidCoupons() {
-        log.info("Fetching all valid coupons");
-
         LocalDateTime now = LocalDateTime.now();
         List<Coupon> validCoupons = couponRepository.findValidCoupons(now);
 
         return validCoupons.stream()
-                .filter(Coupon::isActive)
-                .filter(c -> c.getUsedCount() < c.getUsageLimit())
                 .map(couponMapper::toResponse)
                 .toList();
     }
 
     @Override
     public CouponResponse getCouponByCode(String code) {
-        log.info("Fetching coupon with code: {}", code);
-
         Coupon coupon = couponRepository.findByCode(code)
                 .orElseThrow(() -> new AppException(ErrorCode.COUPON_NOT_FOUND));
 
@@ -104,8 +87,6 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     public void validateCouponForCart(Coupon coupon, Double cartTotal) {
-        log.info("Validating coupon: {} for cart total: {}", coupon.getCode(), cartTotal);
-
         // Check if coupon is active
         if (!coupon.isActive()) {
             throw new AppException(ErrorCode.COUPON_NOT_ACTIVE);
@@ -133,16 +114,14 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     public Double calculateDiscount(Coupon coupon, Double cartTotal) {
-        log.info("Calculating discount for coupon: {} with cart total: {}", coupon.getCode(), cartTotal);
-
         Double discount = 0.0;
 
         if ("PERCENTAGE".equals(coupon.getDiscountType())) {
             discount = (cartTotal * coupon.getValue()) / 100;
-            // Cap at maxDiscountAmount if set
-            if (coupon.getMaxDiscountAmount() != null && discount > coupon.getMaxDiscountAmount()) {
-                discount = coupon.getMaxDiscountAmount();
-            }
+//             Cap at maxDiscountAmount if set
+//            if (coupon.getMaxDiscountAmount() != null && discount > coupon.getMaxDiscountAmount()) {
+//                discount = coupon.getMaxDiscountAmount();
+//            }
         } else if ("FIXED".equals(coupon.getDiscountType())) {
             discount = coupon.getValue();
             // Ensure discount doesn't exceed cart total
@@ -151,7 +130,6 @@ public class CouponServiceImpl implements CouponService {
             }
         }
 
-        log.info("Calculated discount: {} for coupon: {}", discount, coupon.getCode());
         return discount;
     }
 }

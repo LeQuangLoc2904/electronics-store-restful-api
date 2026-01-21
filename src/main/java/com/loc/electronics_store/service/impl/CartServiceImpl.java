@@ -192,6 +192,9 @@ public class CartServiceImpl implements CartService {
                 .build();
         userCouponRepository.save(userCoupon);
 
+        coupon.setUsedCount(coupon.getUsedCount() + 1);
+        couponRepository.save(coupon);
+
         return getCart(Optional.ofNullable(coupon.getId()));
     }
 
@@ -207,6 +210,10 @@ public class CartServiceImpl implements CartService {
 
         Optional<UserCoupon> userCoupon = userCouponRepository.findActiveCouponByUserId(user.getId(), couponId.get());
         if (userCoupon.isPresent()) {
+            Coupon coupon = userCoupon.get().getCoupon();
+            coupon.setUsedCount(coupon.getUsedCount() - 1);
+            couponRepository.save(coupon);
+
             userCouponRepository.delete(userCoupon.get());
             log.info("Coupon removed successfully for user: {}", username);
         }
