@@ -58,6 +58,19 @@ public class CartServiceImpl implements CartService {
         List<CartItem> cartItems = cartItemRepository.findByUser(user);
 
         if (cartItems.isEmpty()) {
+            if (couponId.isPresent()) {
+                Coupon coupon = couponRepository.findById(couponId.get())
+                        .orElseThrow(()-> new AppException(ErrorCode.COUPON_NOT_FOUND));
+
+                coupon.setUsedCount(coupon.getUsedCount() - 1);
+                couponRepository.save(coupon);
+
+                Optional<UserCoupon> userCoupon = userCouponRepository
+                        .findByUser_IdAndCoupon_IdAndOrderIdIsNull(user.getId(), couponId.get());
+
+                userCouponRepository.delete(userCoupon.get());
+            }
+
             return CartResponse.builder()
                     .cartItemResponses(new ArrayList<>())
                     .subTotal(0.0)
