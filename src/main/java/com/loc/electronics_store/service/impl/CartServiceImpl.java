@@ -6,7 +6,6 @@ import com.loc.electronics_store.dto.request.cart.CartResponse;
 import com.loc.electronics_store.entity.CartItem;
 import com.loc.electronics_store.entity.Coupon;
 import com.loc.electronics_store.entity.Product;
-import com.loc.electronics_store.entity.User;
 import com.loc.electronics_store.entity.UserCoupon;
 import com.loc.electronics_store.exception.AppException;
 import com.loc.electronics_store.exception.ErrorCode;
@@ -26,7 +25,6 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.List;
