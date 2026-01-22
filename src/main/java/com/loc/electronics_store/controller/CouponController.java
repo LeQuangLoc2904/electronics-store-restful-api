@@ -19,9 +19,6 @@ import java.util.List;
 public class CouponController {
     CouponService couponService;
 
-    /**
-     * Admin: Create new coupon
-     */
     @PostMapping
     ApiResponse<CouponResponse> createCoupon(@RequestBody CouponCreationRequest request) {
         return ApiResponse.<CouponResponse>builder()
@@ -30,9 +27,6 @@ public class CouponController {
                 .build();
     }
 
-    /**
-     * Admin: Update coupon
-     */
     @PutMapping("/{couponId}")
     ApiResponse<CouponResponse> updateCoupon(
             @PathVariable Long couponId,
@@ -43,9 +37,6 @@ public class CouponController {
                 .build();
     }
 
-    /**
-     * Admin: Delete coupon
-     */
     @DeleteMapping("/{couponId}")
     ApiResponse<Void> deleteCoupon(@PathVariable Long couponId) {
         couponService.deleteCoupon(couponId);
@@ -54,9 +45,6 @@ public class CouponController {
                 .build();
     }
 
-    /**
-     * User: Get all available coupons
-     */
     @GetMapping("/available")
     ApiResponse<List<CouponResponse>> getAllValidCoupons() {
         return ApiResponse.<List<CouponResponse>>builder()
@@ -65,9 +53,6 @@ public class CouponController {
                 .build();
     }
 
-    /**
-     * User: Get coupon by code
-     */
     @GetMapping("/code/{code}")
     ApiResponse<CouponResponse> getCouponByCode(@PathVariable String code) {
         return ApiResponse.<CouponResponse>builder()

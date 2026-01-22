@@ -13,6 +13,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,16 @@ import java.util.List;
 public class CouponServiceImpl implements CouponService {
     CouponRepository couponRepository;
     CouponMapper couponMapper;
+
+    @Scheduled(initialDelay = 5000, fixedRate = 3600000)
+    public void updateCouponStatus() {
+        LocalDateTime now = LocalDateTime.now();
+        log.info("Bắt đầu quét cập nhật trạng thái Coupon lúc: {}", now);
+
+        int deactivatedCount = couponRepository.deactivateInvalidCoupons(now);
+
+        log.info("Hoàn tất: Đã tắt {} mã", deactivatedCount);
+    }
 
     @Override
     @Transactional
@@ -70,7 +81,7 @@ public class CouponServiceImpl implements CouponService {
     @Override
     public List<CouponResponse> getAllValidCoupons() {
         LocalDateTime now = LocalDateTime.now();
-        List<Coupon> validCoupons = couponRepository.findValidCoupons(now);
+        List<Coupon> validCoupons = couponRepository.findByIsActiveTrue();
 
         return validCoupons.stream()
                 .map(couponMapper::toResponse)
