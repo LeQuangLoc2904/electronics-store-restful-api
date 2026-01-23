@@ -187,16 +187,13 @@ public class CartServiceImpl implements CartService {
         List<CartItem> cartItems = cartItemRepository.findByUser(user);
         Double cartTotal = getSubTotalPrice(cartItems);
 
-        // Validate coupon
         couponService.validateCouponForCart(coupon, cartTotal);
 
-        // Check if user already has an active coupon
         Optional<UserCoupon> existingCoupon = userCouponRepository.findActiveCouponByUserId(user.getId(), Optional.ofNullable(coupon).get().getId());
         if (existingCoupon.isPresent()) {
             throw new AppException(ErrorCode.COUPON_ALREADY_SELECTED);
         }
 
-        // Save user coupon
         UserCoupon userCoupon = UserCoupon.builder()
                 .user(user)
                 .coupon(coupon)
@@ -204,6 +201,10 @@ public class CartServiceImpl implements CartService {
         userCouponRepository.save(userCoupon);
 
         coupon.setUsedCount(coupon.getUsedCount() + 1);
+        if (coupon.getUsedCount() >= coupon.getUsageLimit()) {
+            coupon.setActive(false);
+        }
+
         couponRepository.save(coupon);
 
         return getCart(Optional.ofNullable(coupon.getId()));
