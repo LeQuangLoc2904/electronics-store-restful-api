@@ -98,11 +98,6 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     public void validateCouponForCart(Coupon coupon, Double cartTotal) {
-        // Check if coupon is active
-        if (!coupon.isActive()) {
-            throw new AppException(ErrorCode.COUPON_NOT_ACTIVE);
-        }
-
         // Check date range
         LocalDateTime now = LocalDateTime.now();
         if (now.isBefore(coupon.getStartDate())) {
@@ -129,10 +124,6 @@ public class CouponServiceImpl implements CouponService {
 
         if ("PERCENTAGE".equals(coupon.getDiscountType())) {
             discount = (cartTotal * coupon.getValue()) / 100;
-//             Cap at maxDiscountAmount if set
-//            if (coupon.getMaxDiscountAmount() != null && discount > coupon.getMaxDiscountAmount()) {
-//                discount = coupon.getMaxDiscountAmount();
-//            }
         } else if ("FIXED".equals(coupon.getDiscountType())) {
             discount = coupon.getValue();
             // Ensure discount doesn't exceed cart total
