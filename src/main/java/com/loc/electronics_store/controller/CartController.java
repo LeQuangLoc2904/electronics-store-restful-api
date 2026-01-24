@@ -20,40 +20,33 @@ public class CartController {
     CartService cartService;
 
     @GetMapping
-    ApiResponse<CartResponse> getCart(@RequestParam(required = false) Long couponId) {
+    ApiResponse<CartResponse> getCart() {
         return ApiResponse.<CartResponse>builder()
-                .result(couponId == null ? cartService.getCart(Optional.empty())
-                                        : cartService.getCart(Optional.ofNullable(couponId)))
+                .result(cartService.getCart())
                 .build();
     }
 
     @PostMapping("/item/add")
-    ApiResponse<CartResponse> addProduct(@RequestParam Long productId, @RequestParam(required = false) Long couponId) {
+    ApiResponse<CartResponse> addProduct(@RequestParam Long productId) {
         return ApiResponse.<CartResponse>builder()
-                .result(couponId == null ? cartService.addItem(productId,Optional.empty())
-                        : cartService.addItem(productId, Optional.ofNullable(couponId)))
+                .result(cartService.addItem(productId))
                 .build();
     }
 
     @PostMapping("/item/decrease")
-    ApiResponse<CartResponse> decreaseQuantity(@RequestParam Long productId, @RequestParam(required = false) Long couponId) {
+    ApiResponse<CartResponse> decreaseQuantity(@RequestParam Long productId) {
         return ApiResponse.<CartResponse>builder()
-                .result(couponId == null ? cartService.decreaseQuantity(productId, Optional.empty())
-                        : cartService.decreaseQuantity(productId, Optional.ofNullable(couponId)))
+                .result(cartService.decreaseQuantity(productId))
                 .build();
     }
 
     @DeleteMapping("item/delete")
-    ApiResponse<CartResponse> delete(@RequestParam Long productId, @RequestParam(required = false) Long couponId) {
+    ApiResponse<CartResponse> delete(@RequestParam Long productId) {
         return ApiResponse.<CartResponse>builder()
-                .result(couponId == null ? cartService.deleteItem(productId, Optional.empty())
-                        : cartService.deleteItem(productId, Optional.ofNullable(couponId)))
+                .result(cartService.deleteItem(productId))
                 .build();
     }
 
-    /**
-     * Apply coupon to cart
-     */
     @PostMapping("/coupon/apply")
     ApiResponse<CartResponse> applyCoupon(@RequestBody ApplyCouponRequest request) {
         return ApiResponse.<CartResponse>builder()
@@ -62,13 +55,10 @@ public class CartController {
                 .build();
     }
 
-    /**
-     * Remove applied coupon from cart
-     */
     @DeleteMapping("/coupon/remove")
     ApiResponse<CartResponse> removeCoupon(@RequestParam(required = false) Long couponId) {
         return ApiResponse.<CartResponse>builder()
-                .result(cartService.removeCoupon(Optional.ofNullable(couponId)))
+                .result(cartService.removeCoupon(couponId))
                 .message("Coupon removed successfully")
                 .build();
     }

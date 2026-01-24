@@ -45,7 +45,7 @@ public class CartServiceImpl implements CartService {
     CouponMapper couponMapper;
 
     @Override
-    public CartResponse getCart(Optional<Long> couponId) {
+    public CartResponse getCart() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         var username = authentication.getName();
 
@@ -56,17 +56,15 @@ public class CartServiceImpl implements CartService {
         List<CartItem> cartItems = cartItemRepository.findByUser(user);
 
         if (cartItems.isEmpty()) {
-            if (couponId.isPresent()) {
-                Coupon coupon = couponRepository.findById(couponId.get())
-                        .orElseThrow(()-> new AppException(ErrorCode.COUPON_NOT_FOUND));
+            List<UserCoupon> userCoupons = userCouponRepository.findByUser_IdAndOrderIdNull(user.getId());
+            if (!userCoupons.isEmpty()) {
+                userCoupons.forEach(userCoupon -> {
+                    Coupon coupon = userCoupon.getCoupon();
+                    coupon.setUsedCount(coupon.getUsedCount() - 1);
+                    couponRepository.save(coupon);
 
-                coupon.setUsedCount(coupon.getUsedCount() - 1);
-                couponRepository.save(coupon);
-
-                Optional<UserCoupon> userCoupon = userCouponRepository
-                        .findByUser_IdAndCoupon_IdAndOrderIdIsNull(user.getId(), couponId.get());
-
-                userCouponRepository.delete(userCoupon.get());
+                    userCouponRepository.delete(userCoupon);
+                });
             }
 
             return CartResponse.builder()
@@ -74,7 +72,7 @@ public class CartServiceImpl implements CartService {
                     .subTotal(0.0)
                     .discountAmount(0.0)
                     .totalPrice(0.0)
-                    .appliedCoupon(null)
+                    .appliedCoupons(null)
                     .build();
         }
 
@@ -87,15 +85,10 @@ public class CartServiceImpl implements CartService {
 
         Double subTotal = getSubTotalPrice(cartItems);
         Double discountAmount = 0.0;
-        UserCoupon userCoupon = null;
+        List<UserCoupon> userCoupons = userCouponRepository.findByUser_IdAndOrderIdNull(user.getId());
 
-        if (couponId.isPresent()) {
-            Optional<UserCoupon> appliedCoupon = userCouponRepository.findActiveCouponByUserId(user.getId(), couponId.get());
-            if (appliedCoupon.isPresent()) {
-                userCoupon = appliedCoupon.get();
-                Coupon coupon = userCoupon.getCoupon();
-                discountAmount = couponService.calculateDiscount(coupon, subTotal);
-            }
+        if (!userCoupons.isEmpty()) {
+           discountAmount = couponService.calculateDiscount(userCoupons, subTotal);
         }
 
         Double totalPrice = Math.max(subTotal - discountAmount, 0.0);
@@ -105,12 +98,16 @@ public class CartServiceImpl implements CartService {
                 .subTotal(subTotal)
                 .discountAmount(discountAmount)
                 .totalPrice(totalPrice)
-                .appliedCoupon(userCoupon != null ? couponMapper.toResponse(userCoupon.getCoupon()) : null)
+                .appliedCoupons(
+                        !userCoupons.isEmpty() ?
+                        userCoupons.stream().map(
+                        userCoupon -> couponMapper.toResponse(userCoupon.getCoupon())
+                        ).toList() : null)
                 .build();
     }
 
     @Override
-    public CartResponse addItem(Long productId, Optional<Long> couponId) {
+    public CartResponse addItem(Long productId) {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         var username = authentication.getName();
 
@@ -135,11 +132,11 @@ public class CartServiceImpl implements CartService {
             cartItemRepository.save(cartItem);
         }
 
-        return couponId.isPresent() ? getCart(couponId) : getCart(Optional.empty());
+        return getCart();
     }
 
     @Override
-    public CartResponse decreaseQuantity(Long id, Optional<Long> couponId) {
+    public CartResponse decreaseQuantity(Long id) {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         var username = authentication.getName();
 
@@ -153,12 +150,12 @@ public class CartServiceImpl implements CartService {
         cartItem.setQuantity(cartItem.getQuantity() - 1);
         cartItemRepository.save(cartItem);
 
-        return couponId.isPresent() ? getCart(couponId) : getCart(Optional.empty());
+        return getCart();
     }
 
     @Override
     @Transactional
-    public CartResponse deleteItem(Long productId, Optional<Long> couponId) {
+    public CartResponse deleteItem(Long productId) {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         var username = authentication.getName();
 
@@ -168,7 +165,7 @@ public class CartServiceImpl implements CartService {
 
         cartItemRepository.deleteByUserAndProduct_Id(user, productId);
 
-        return couponId.isPresent() ? getCart(couponId) : getCart(Optional.empty());
+        return getCart();
     }
 
     @Override
@@ -189,7 +186,8 @@ public class CartServiceImpl implements CartService {
 
         couponService.validateCouponForCart(coupon, cartTotal);
 
-        Optional<UserCoupon> existingCoupon = userCouponRepository.findActiveCouponByUserId(user.getId(), Optional.ofNullable(coupon).get().getId());
+        Optional<UserCoupon> existingCoupon = userCouponRepository
+                .findActiveCouponByUserId(user.getId(), coupon.getId());
         if (existingCoupon.isPresent()) {
             throw new AppException(ErrorCode.COUPON_ALREADY_SELECTED);
         }
@@ -207,12 +205,12 @@ public class CartServiceImpl implements CartService {
 
         couponRepository.save(coupon);
 
-        return getCart(Optional.ofNullable(coupon.getId()));
+        return getCart();
     }
 
     @Override
     @Transactional
-    public CartResponse removeCoupon(Optional<Long> couponId) {
+    public CartResponse removeCoupon(Long couponId) {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         var username = authentication.getName();
 
@@ -220,17 +218,20 @@ public class CartServiceImpl implements CartService {
                 () -> new AppException(ErrorCode.USER_NOT_EXISTED)
         );
 
-        Optional<UserCoupon> userCoupon = userCouponRepository.findActiveCouponByUserId(user.getId(), couponId.get());
+        Optional<UserCoupon> userCoupon = userCouponRepository.findActiveCouponByUserId(user.getId(), couponId);
         if (userCoupon.isPresent()) {
             Coupon coupon = userCoupon.get().getCoupon();
             coupon.setUsedCount(coupon.getUsedCount() - 1);
+
+            if (!coupon.isActive()) coupon.setActive(true);
+
             couponRepository.save(coupon);
 
             userCouponRepository.delete(userCoupon.get());
             log.info("Coupon removed successfully for user: {}", username);
         }
 
-        return getCart(Optional.empty());
+        return getCart();
     }
 
     @Override

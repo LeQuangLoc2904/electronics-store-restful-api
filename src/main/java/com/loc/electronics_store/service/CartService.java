@@ -8,15 +8,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CartService {
-    CartResponse getCart(Optional<Long> couponId);
-    CartResponse addItem(Long productId, Optional<Long> couponId);
-    CartResponse decreaseQuantity(Long id, Optional<Long> couponId);
-    CartResponse deleteItem(Long productId, Optional<Long> couponId);
+    CartResponse getCart();
+    CartResponse addItem(Long productId);
+    CartResponse decreaseQuantity(Long id);
+    CartResponse deleteItem(Long productId);
 
-    // Coupon operations
     CartResponse applyCoupon(String couponCode);
-    CartResponse removeCoupon(Optional<Long> couponId);
+    CartResponse removeCoupon(Long couponId);
 
-    // Price calculation methods
     Double getSubTotalPrice(List<CartItem> cartItems);
 }

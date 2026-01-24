@@ -4,6 +4,7 @@ import com.loc.electronics_store.dto.request.coupon.CouponCreationRequest;
 import com.loc.electronics_store.dto.request.coupon.CouponUpdateRequest;
 import com.loc.electronics_store.dto.response.coupon.CouponResponse;
 import com.loc.electronics_store.entity.Coupon;
+import com.loc.electronics_store.entity.UserCoupon;
 
 import java.util.List;
 
@@ -17,6 +18,6 @@ public interface CouponService {
 
     void validateCouponForCart(Coupon coupon, Double cartTotal);
 
-    Double calculateDiscount(Coupon coupon, Double cartTotal);
+    Double calculateDiscount(List<UserCoupon> userCoupons, Double cartTotal);
 }
 
