@@ -16,8 +16,8 @@ import java.util.List;
 //@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class CartResponse {
     List<CartItemResponse> cartItemResponses;
-    Double subTotal; // Tổng tiền trước khi áp dụng coupon
-    Double discountAmount; // Số tiền được giảm
-    Double totalPrice; // Tổng tiền sau khi áp dụng coupon
-    CouponResponse appliedCoupon; // Coupon được áp dụng (nếu có)
+    Double subTotal;
+    Double discountAmount;
+    Double totalPrice;
+    List<CouponResponse> appliedCoupons;
 }

@@ -4,6 +4,7 @@ import com.loc.electronics_store.dto.request.coupon.CouponCreationRequest;
 import com.loc.electronics_store.dto.request.coupon.CouponUpdateRequest;
 import com.loc.electronics_store.dto.response.coupon.CouponResponse;
 import com.loc.electronics_store.entity.Coupon;
+import com.loc.electronics_store.entity.UserCoupon;
 import com.loc.electronics_store.exception.AppException;
 import com.loc.electronics_store.exception.ErrorCode;
 import com.loc.electronics_store.mapper.CouponMapper;
@@ -119,18 +120,18 @@ public class CouponServiceImpl implements CouponService {
     }
 
     @Override
-    public Double calculateDiscount(Coupon coupon, Double cartTotal) {
+    public Double calculateDiscount(List<UserCoupon> userCoupons, Double cartTotal) {
         Double discount = 0.0;
 
-        if ("PERCENTAGE".equals(coupon.getDiscountType())) {
-            discount = (cartTotal * coupon.getValue()) / 100;
-        } else if ("FIXED".equals(coupon.getDiscountType())) {
-            discount = coupon.getValue();
-            // Ensure discount doesn't exceed cart total
-            if (discount > cartTotal) {
-                discount = cartTotal;
+        for (UserCoupon o : userCoupons) {
+            Coupon coupon = o.getCoupon();
+
+            if ("FIXED".equals(coupon.getDiscountType())) {
+                discount += coupon.getValue();
             }
         }
+
+        if (discount >= cartTotal) discount = cartTotal;
 
         return discount;
     }
