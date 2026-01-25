@@ -147,6 +147,20 @@ public class CartServiceImpl implements CartService {
         Product product = productRepository.findByIdAndDeletedFalse(id);
         CartItem cartItem = cartItemRepository.findByUser_IdAndProduct_Id(user.getId(), id).orElse(null);
 
+        List<UserCoupon> userCoupons = userCouponRepository.findByUser_IdAndOrderIdNull(user.getId());
+        if (!userCoupons.isEmpty()) {
+            List<CartItem> cartItems = cartItemRepository.findByUser(user);
+            Double subTotal = getSubTotalPrice(cartItems);
+
+            Double newTemporaryTotalPrice = subTotal - product.getPrice();
+
+            userCoupons.forEach(userCoupon -> {
+                if (newTemporaryTotalPrice < userCoupon.getCoupon().getMinOrderValue()) {
+                    throw new AppException(ErrorCode.COUPON_MINIMUM_ORDER_NOT_MET);
+                }
+            });
+        }
+
         cartItem.setQuantity(cartItem.getQuantity() - 1);
         cartItemRepository.save(cartItem);
 
