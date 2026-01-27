@@ -23,6 +23,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,6 +126,7 @@ public class ProductServiceImpl implements ProductService {
         Product newProduct = productMapper.toEntity(productRequest);
         newProduct.setCategory(category);
         newProduct.setBrand(brand);
+        newProduct.setCreatedAt(LocalDateTime.now());
 
         newProduct = productRepository.save(newProduct);
         return productMapper.toResponse(newProduct);
@@ -147,6 +149,8 @@ public class ProductServiceImpl implements ProductService {
             productImageRepository.deleteByProduct_Id(productId);
             productAttributeRepository.deleteByProduct_Id(productId);
             productMapper.updateEntityFromDto(updateRequest, existingProduct);
+
+            existingProduct.setUpdatedAt(LocalDateTime.now());
 
             return productMapper.toResponse(productRepository.save(existingProduct));
         }
