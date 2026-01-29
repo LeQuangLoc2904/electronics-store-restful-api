@@ -17,8 +17,8 @@ public class Order extends BaseEntity {
     @ManyToOne @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne @JoinColumn(name = "coupon_id")
-    private Coupon coupon; // Nếu dùng mã giảm giá
+    @ManyToMany
+    private List<Coupon> coupons;
 
     private Double totalMoney;      // Tổng tiền gốc của các SP
     private Double discountAmount;  // Số tiền được giảm (từ Coupon + Promotion)
