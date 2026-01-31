@@ -14,7 +14,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface OrderMapper {
     @Mapping(target = "id", source = "order.id")
-    @Mapping(target = "totalAmount", source = "order.totalAmount")
+    @Mapping(target = "totalAmount", source = "order.totalMoney")
     @Mapping(target = "orderDate", source = "order.createdAt")
     @Mapping(target = "discountAmount", source = "order.discountAmount")
     @Mapping(target = "finalAmount", source = "order.finalAmount")

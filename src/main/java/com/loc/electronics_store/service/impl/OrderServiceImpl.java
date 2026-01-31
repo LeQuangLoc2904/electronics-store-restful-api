@@ -1,8 +1,10 @@
 package com.loc.electronics_store.service.impl;
 
+import com.loc.electronics_store.dto.response.order.OrderResponse;
 import com.loc.electronics_store.entity.*;
 import com.loc.electronics_store.exception.AppException;
 import com.loc.electronics_store.exception.ErrorCode;
+import com.loc.electronics_store.mapper.OrderMapper;
 import com.loc.electronics_store.repository.CartItemRepository;
 import com.loc.electronics_store.repository.OrderRepository;
 import com.loc.electronics_store.repository.UserCouponRepository;
@@ -31,6 +33,7 @@ public class OrderServiceImpl implements OrderService {
     OrderRepository orderRepository;
     CartService cartService;
     CouponService couponService;
+    OrderMapper orderMapper;
 
 
     @Override
@@ -81,5 +84,13 @@ public class OrderServiceImpl implements OrderService {
         );
 
         return "Place an order successfully";
+    }
+
+    @Override
+    public List<OrderResponse> getAll() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        List<Order> orders = orderRepository.findByUser_Username(authentication.getName());
+
+        return orders.stream().map(orderMapper::toOrderResponse).toList();
     }
 }
