@@ -7,4 +7,5 @@ import java.util.List;
 public interface OrderService {
     String createOrder(String paymentMethod);
     List<OrderResponse> getAll();
+    List<OrderResponse> getAllByStatus(String status);
 }
