@@ -89,7 +89,15 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderResponse> getAll() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
-        List<Order> orders = orderRepository.findByUser_Username(authentication.getName());
+        List<Order> orders = orderRepository.findByUser_UsernameOrderByCreatedAtDesc(authentication.getName());
+
+        return orders.stream().map(orderMapper::toOrderResponse).toList();
+    }
+
+    @Override
+    public List<OrderResponse> getAllByStatus(String status) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        List<Order> orders = orderRepository.findByStatusOrderByCreatedAtDesc(status);
 
         return orders.stream().map(orderMapper::toOrderResponse).toList();
     }

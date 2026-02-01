@@ -28,9 +28,13 @@ public class OrderController {
     }
 
     @GetMapping
-    ApiResponse<List<OrderResponse>> getAll() {
+    ApiResponse<List<OrderResponse>> getAll(@RequestParam(required = false) String status) {
         return ApiResponse.<List<OrderResponse>>builder()
-                .result(orderService.getAll())
+                .result(
+                        status != null && !status.isEmpty()
+                        ? orderService.getAllByStatus(status)
+                        : orderService.getAll()
+                )
                 .build();
     }
 }

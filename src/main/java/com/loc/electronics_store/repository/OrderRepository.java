@@ -7,8 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
-    List<Order> findByUser_Username(String username);
-
-    List<Order> findByStatus(String status);
+    List<Order> findByUser_UsernameOrderByCreatedAtDesc(String username);
+    List<Order> findByStatusOrderByCreatedAtDesc(String status);
 }
 
